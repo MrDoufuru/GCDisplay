@@ -30,8 +30,8 @@ spellTexture:Hide()
 
 local candidateNoCdSpell = {
     Warrior = {
-        "Rend",
         "Battle Shout",
+        "Rend",
         "Demoralizing Shout",
         "Sunder Armor",
     },
