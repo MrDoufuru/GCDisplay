@@ -1,0 +1,8 @@
+## Interface: 11200
+## Title: GCDisplay
+## Notes: Global Cooldown Display.
+## Author: MrTofu
+## Version: 0.1.0
+backport.lua
+GCDisplay.lua
+Overpower.lua
