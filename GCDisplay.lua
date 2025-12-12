@@ -126,7 +126,6 @@ local function ShowGcd()
     end
     local elapsedTime = GetTime() - start
     if lastElapsedTime > elapsedTime then
-        print('s:' .. start .. ' d:' .. duration)
         lastElapsedTime = elapsedTime
         if newSpellCasted then
             PlaySoundFile([[Interface\AddOns\GCDisplay\assets\sounds\plop_01.ogg]])
@@ -165,7 +164,6 @@ local function ShowSpellIcon(spell)
             if sName == spell then
                 local newIcon = GetSpellTexture(sId, BOOKTYPE_SPELL)
                 if newIcon then
-                    print('icon loaded: ' .. newIcon)
                     spellTexture:SetTexture(newIcon)
                 else
                     spellTexture:SetTexture(nil)
@@ -190,7 +188,6 @@ gcd:SetScript("OnEvent", function()
     end
 
     if spell then
-        print('spell caster: ' .. spell)
         ShowSpellIcon(spell)
         newSpellCasted = true
     end
