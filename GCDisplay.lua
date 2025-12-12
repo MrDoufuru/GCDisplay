@@ -36,8 +36,29 @@ local candidateNoCdSpell = {
         "Sunder Armor",
     },
     Rogue = {
-        'Sinister Strike'
-    }
+        'Sinister Strike',
+    },
+    Hunter = {
+        'Aspect of the Monkey',
+    },
+    Priest = {
+        'Power Word: Fortitude',
+    },
+    Mage = {
+        'Arcane Intellect',
+    },
+    Shaman = {
+        'Rockbiter Weapon',
+    },
+    Paladin = {
+        'Devotion Aura',
+    },
+    Warlock = {
+        'Demon Skin',
+    },
+    Druid = {
+        'Mark of the Wild',
+    },
 }
 
 local function SpellIsInCd(spellName)
@@ -79,7 +100,7 @@ local function FindSpellWithoutCd()
 end
 local spellId, spellName = FindSpellWithoutCd()
 local lastElapsedTime = 1000
-local newIconLoaded = false
+local newSpellCasted = false
 
 local function ShowGcd()
     if gcdTexture then
@@ -100,21 +121,23 @@ local function ShowGcd()
     if start == 0 then
         return
     end
+    if not newSpellCasted then
+        return
+    end
     local elapsedTime = GetTime() - start
     if lastElapsedTime > elapsedTime then
-        spellTexture:SetTexture(nil)
+        print('s:' .. start .. ' d:' .. duration)
         lastElapsedTime = elapsedTime
-        PlaySoundFile([[Interface\AddOns\GCDisplay\assets\sounds\plop_01.ogg]])
-    end
-    if not newIconLoaded then
-        return
+        if newSpellCasted then
+            PlaySoundFile([[Interface\AddOns\GCDisplay\assets\sounds\plop_01.ogg]])
+        end
     end
     lastElapsedTime = elapsedTime
     local ratio = elapsedTime / duration
     if ratio > 0.95 then
         gcdTexture:Hide()
         spellTexture:Hide()
-        newIconLoaded = false
+        newSpellCasted = false
         return
     end
     gcdTexture:Show()
@@ -142,7 +165,10 @@ local function ShowSpellIcon(spell)
             if sName == spell then
                 local newIcon = GetSpellTexture(sId, BOOKTYPE_SPELL)
                 if newIcon then
+                    print('icon loaded: ' .. newIcon)
                     spellTexture:SetTexture(newIcon)
+                else
+                    spellTexture:SetTexture(nil)
                 end
             end
         end
@@ -164,7 +190,8 @@ gcd:SetScript("OnEvent", function()
     end
 
     if spell then
+        print('spell caster: ' .. spell)
         ShowSpellIcon(spell)
-        newIconLoaded = true
+        newSpellCasted = true
     end
 end)
