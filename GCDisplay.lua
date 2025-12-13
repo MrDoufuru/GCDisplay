@@ -1,5 +1,5 @@
 if SUPERWOW_STRING == nil or SUPERWOW_VERSION == nil then
-    print('GCDisplay requires SuperWoW to run.')
+    DEFAULT_CHAT_FRAME:AddMessage('GCDisplay requires SuperWoW to run.')
     return
 end
 
