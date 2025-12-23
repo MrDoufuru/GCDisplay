@@ -151,7 +151,6 @@ end
 
 gcd:SetScript("OnUpdate", ShowGcd)
 
--- gcd:RegisterEvent('CHAT_MSG_SPELL_SELF_DAMAGE')
 gcd:RegisterEvent('UNIT_CASTEVENT')
 
 local function ShowSpellIcon(spell)
@@ -174,12 +173,20 @@ local function ShowSpellIcon(spell)
     return nil
 end
 
-gcd:SetScript("OnEvent", function()
-    if not arg1 then return end
-
-    local caster, target, event, spellID, castDuration = arg1, arg2, arg3, arg4, arg5
+local currentCast = nil
+local function OnUnitCastEvent(caster, target, event, spellID, castDuration)
     local _, playerGuid = UnitExists('player')
-    if event ~= "CAST" or playerGuid ~= caster then
+    if playerGuid ~= caster then
+        return
+    end
+    if event == "START" and castDuration > 0 then
+        currentCast = spellID
+    end
+    if event ~= "CAST" then
+        return
+    end
+    if spellID == currentCast then
+        currentCast = nil
         return
     end
     local spell = SpellInfo(spellID)
@@ -191,4 +198,11 @@ gcd:SetScript("OnEvent", function()
         ShowSpellIcon(spell)
         newSpellCasted = true
     end
+end
+
+gcd:SetScript("OnEvent", function()
+    if not arg1 then return end
+
+    local caster, target, event, spellID, castDuration = arg1, arg2, arg3, arg4, arg5
+    OnUnitCastEvent(caster, target, event, spellID, castDuration)
 end)
